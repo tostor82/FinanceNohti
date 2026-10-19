@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tjaša Oštir — Blagajna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Svetel, čist salon: porcelanasta podlaga, črnilo, prašna roza kot poudarek */
+  :root{
+    --bg:#f6f4f3; --surface:#ffffff; --surface-2:#f1edeb; --surface-3:#e9e3e0;
+    --line:#ddd4d0; --line-soft:#ebe5e2;
+    --ink:#1d1a1b; --muted:#6f6467; --faint:#9a8f92;
+    --rose:#b0687a; --rose-soft:#f3e3e7; --rose-ink:#8c4a5b;
+    --sage:#5f8a6e; --sage-soft:#e3eee6;
+    --slate:#5b7486; --slate-soft:#e2e9ee;
+    --gold:#a3823f; --gold-soft:#f2ead9;
+    --red:#b2483d; --red-soft:#f6e1de;
+    --display:"Bodoni Moda",Didot,"Times New Roman",serif;
+    --sans:Jost,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --radius:16px; --radius-sm:10px;
+    --shadow:0 1px 2px rgba(29,26,27,.04),0 8px 24px -14px rgba(29,26,27,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171415; --surface:#211d1e; --surface-2:#2a2526; --surface-3:#342e2f;
+      --line:#3d3537; --line-soft:#2f2829;
+      --ink:#f2ecec; --muted:#b3a6a9; --faint:#867a7d;
+      --rose:#d995a6; --rose-soft:#3a262c; --rose-ink:#ecb6c3;
+      --sage:#8fbd9c; --sage-soft:#22302a;
+      --slate:#94b1c4; --slate-soft:#232d34;
+      --gold:#d3b26f; --gold-soft:#35301f;
+      --red:#e08b80; --red-soft:#3a2321;
+      --shadow:0 10px 30px -14px rgba(0,0,0,.7);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171415; --surface:#211d1e; --surface-2:#2a2526; --surface-3:#342e2f;
+    --line:#3d3537; --line-soft:#2f2829;
+    --ink:#f2ecec; --muted:#b3a6a9; --faint:#867a7d;
+    --rose:#d995a6; --rose-soft:#3a262c; --rose-ink:#ecb6c3;
+    --sage:#8fbd9c; --sage-soft:#22302a;
+    --slate:#94b1c4; --slate-soft:#232d34;
+    --gold:#d3b26f; --gold-soft:#35301f;
+    --red:#e08b80; --red-soft:#3a2321;
+    --shadow:0 10px 30px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:var(--sans);font-size:15px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;min-height:100vh;
+    padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));
+  }
+  .wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+  /* Header */
+  header{padding-block:calc(22px + env(safe-area-inset-top,0px)) 6px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .owner{font-family:var(--sans);font-weight:600;letter-spacing:.24em;text-transform:uppercase;font-size:11px;color:var(--muted)}
+  .word{font-family:var(--display);font-weight:500;font-size:34px;letter-spacing:.16em;line-height:1.05;margin-top:4px}
+  .head-tag{font-size:12px;color:var(--faint);letter-spacing:.06em}
+
+  /* Tabs */
+  nav.tabs{display:flex;gap:4px;margin:18px 0 20px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs button{
+    flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);
+    font-family:var(--sans);font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:12px;
+    padding:10px 12px 11px;cursor:pointer;margin-bottom:-1px;white-space:nowrap;
+  }
+  nav.tabs button:hover{color:var(--ink)}
+  nav.tabs button.active{color:var(--ink);border-bottom-color:var(--rose)}
+  nav.tabs button:focus-visible,.btn:focus-visible,.chip:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+
+  .panel:not(.active){display:none}
+  .panel.active{animation:fade .2s ease}
+  @keyframes fade{from{opacity:.4}to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.panel.active{animation:none}}
+
+  .card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .stack{display:flex;flex-direction:column;gap:16px}
+  h2{font-family:var(--sans);font-weight:600;letter-spacing:.16em;text-transform:uppercase;font-size:12px;margin:0 0 14px;color:var(--ink)}
+  .eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:11px;color:var(--faint);font-weight:500}
+
+  /* Pregled (dnevni / mesečni) */
+  .ledger{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .ledger-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line-soft)}
+  .ledger-date{font-family:var(--display);font-size:20px;font-weight:500}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .stat .lab{letter-spacing:.16em;text-transform:uppercase;font-size:10px;color:var(--faint);margin-bottom:6px;font-weight:500}
+  .stat .val{font-family:var(--display);font-weight:600;font-size:32px;line-height:1;font-variant-numeric:lining-nums tabular-nums}
+  .stat.money .val{color:var(--rose-ink)}
+  .stat.tip .val{color:var(--sage)}
+  .stat .sub{font-size:12px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+  @media(max-width:520px){.stat .val{font-size:24px}}
+  .split{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+  .split .lab{letter-spacing:.14em;text-transform:uppercase;font-size:10px;color:var(--faint);margin-bottom:3px}
+  .split .v{font-weight:600;font-size:17px;font-variant-numeric:tabular-nums}
+  .v.cash{color:var(--sage)} .v.card{color:var(--slate)} .v.bon{color:var(--gold)} .v.unk{color:var(--muted)}
+
+  /* Obrazec */
+  .field{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .field label{letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:var(--muted);font-weight:500}
+  input,select{
+    width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
+    border-radius:var(--radius-sm);padding:11px 12px;font-family:inherit;font-size:16px;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-soft)}
+  input:disabled{opacity:.8}
+  select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:34px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+  .form{display:flex;flex-direction:column;gap:14px}
+  .row{display:grid;gap:12px}
+  .r2{grid-template-columns:1fr 1fr}
+  .r-add{grid-template-columns:1fr 120px auto;align-items:end}
+  @media(max-width:560px){.r2{grid-template-columns:1fr}.r-add{grid-template-columns:1fr 1fr}.r-add .btn{grid-column:1/-1}}
+  .hint{font-size:12px;color:var(--faint)}
+  .hint.return{color:var(--sage)} .hint.newc{color:var(--slate)}
+  .range-hint{font-size:12px;color:var(--rose-ink)}
+
+  .basket{border:1px dashed var(--line);border-radius:var(--radius-sm);padding:6px 12px;background:var(--bg)}
+  .basket-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+  .basket-row:last-of-type{border-bottom:0}
+  .basket-row .nm{min-width:0}
+  .basket-row .cat{font-size:11px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase}
+  .basket-row .pr{font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
+  .basket-total{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 6px;border-top:1px solid var(--line);margin-top:2px}
+  .basket-total span:first-child{letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:var(--muted)}
+  .basket-total b{font-family:var(--display);font-size:24px;color:var(--rose-ink);font-variant-numeric:tabular-nums}
+  .basket-empty{font-size:13px;color:var(--faint);padding:10px 0;text-align:center}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 11px;font-family:inherit;font-size:13px;cursor:pointer}
+  .chip:hover{border-color:var(--rose);color:var(--rose-ink)}
+  .chip b{font-weight:500;color:var(--muted);margin-left:4px}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;
+    font-family:var(--sans);font-weight:500;letter-spacing:.12em;text-transform:uppercase;font-size:12px;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);
+    border-radius:var(--radius-sm);padding:12px 16px;
+  }
+  .btn:hover{border-color:var(--rose);color:var(--rose-ink)}
+  .btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+  .btn.primary:hover{background:var(--rose-ink);border-color:var(--rose-ink);color:var(--bg)}
+  .btn.ghost{background:transparent}
+  .btn.danger{color:var(--red);border-color:var(--red-soft)}
+  .btn.danger:hover{background:var(--red-soft)}
+  .btns{display:flex;gap:10px;flex-wrap:wrap}
+
+  /* Tabele */
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;color:var(--faint);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:11px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  td.money{color:var(--rose-ink);font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .items{font-size:13px;color:var(--muted)}
+  .badge{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:999px;font-weight:500;white-space:nowrap}
+  .badge.ret{background:var(--sage-soft);color:var(--sage)}
+  .badge.new{background:var(--slate-soft);color:var(--slate)}
+  .badge.due{background:var(--rose-soft);color:var(--rose-ink)}
+  .badge.pay-cash{background:var(--sage-soft);color:var(--sage)}
+  .badge.pay-card{background:var(--slate-soft);color:var(--slate)}
+  .badge.pay-bon{background:var(--gold-soft);color:var(--gold)}
+  .empty{text-align:center;color:var(--faint);padding:24px 10px;font-size:14px}
+
+  .bar-row{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+  .bar-row:last-child{border-bottom:0}
+  .bar-name{font-size:14px;min-width:0}
+  .bar-val{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;white-space:nowrap}
+  .bar-track{grid-column:1/-1;height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden}
+  .bar-fill{height:100%;background:var(--rose);border-radius:3px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.grid2,.stats-4{grid-template-columns:1fr}}
+  .flex-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .pill{font-size:12px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-soft);padding:4px 10px;border-radius:999px}
+  .subnote{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 14px;max-width:65ch}
+  .link{color:var(--slate);cursor:pointer;border-bottom:1px dotted var(--slate);font-size:13px;background:none;border-top:0;border-left:0;border-right:0;padding:0;font-family:inherit}
+  .x{color:var(--red);cursor:pointer;font-weight:600;padding:2px 8px;border-radius:6px;background:none;border:0;font-size:14px;font-family:inherit}
+  .x:hover{background:var(--red-soft)}
+  .monthbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .monthbar input{width:auto}
+  .toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:calc(100% - 32px)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="owner">Tjaša Oštir s.p.</div>
+      <div class="word">BLAGAJNA</div>
+    </div>
+    <div class="head-tag">Promet &amp; stranke</div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="blagajna" class="active">Blagajna</button>
+    <button data-tab="mesec">Mesec</button>
+    <button data-tab="skupno">Skupno</button>
+    <button data-tab="stranke">Stranke</button>
+    <button data-tab="cenik">Cenik</button>
+    <button data-tab="podatki">Podatki</button>
+  </nav>
+
+  <!-- BLAGAJNA -->
+  <section class="panel active stack" id="panel-blagajna">
+    <div class="ledger">
+      <div class="ledger-top">
+        <span class="ledger-date" id="dayDate">—</span>
+        <input type="date" id="entryDate" style="width:auto;padding:7px 10px;font-size:14px">
+      </div>
+      <div class="stats">
+        <div class="stat money"><div class="lab">Promet</div><div class="val" id="dPromet">0,00 €</div><div class="sub" id="dPrometSub"></div></div>
+        <div class="stat tip"><div class="lab">Napitnine</div><div class="val" id="dTips">0,00 €</div></div>
+        <div class="stat"><div class="lab">Strank</div><div class="val" id="dCount">0</div><div class="sub" id="dAvg"></div></div>
+      </div>
+      <div class="split" id="daySplit"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="formTitle">Nov obisk</h2>
+      <div class="form">
+        <div class="field">
+          <label for="clientName">Stranka (ime in priimek)</label>
+          <input type="text" id="clientName" list="clientList" placeholder="npr. Nika Kovač" autocomplete="off">
+          <datalist id="clientList"></datalist>
+          <div class="hint" id="returnHint"></div>
+        </div>
+
+        <div class="row r-add">
+          <div class="field">
+            <label for="serviceSel">Storitev</label>
+            <select id="serviceSel"></select>
+          </div>
+          <div class="field">
+            <label for="priceInp">Cena (€)</label>
+            <input type="number" id="priceInp" step="0.5" min="0" inputmode="decimal">
+          </div>
+          <button class="btn" id="addItemBtn" type="button">+ Dodaj</button>
+        </div>
+        <div class="range-hint" id="rangeHint" hidden></div>
+
+        <div class="field">
+          <label>Hitri dodatki</label>
+          <div class="chips" id="quickChips"></div>
+        </div>
+
+        <div class="basket" id="basket"></div>
+
+        <div class="row r2">
+          <div class="field">
+            <label for="paySel">Plačilo</label>
+            <select id="paySel">
+              <option value="gotovina">Gotovina</option>
+              <option value="kartica">Kartica</option>
+              <option value="bon">Bon</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tipInp">Napitnina (€)</label>
+            <input type="number" id="tipInp" step="0.5" min="0" inputmode="decimal" placeholder="0,00">
+          </div>
+        </div>
+        <div class="field">
+          <label for="noteInp">Opomba (neobvezno)</label>
+          <input type="text" id="noteInp" placeholder="npr. barva, oblika, naslednji termin">
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="saveBtn" style="flex:1">Shrani obisk</button>
+          <button class="btn ghost" id="cancelEdit" hidden>Prekliči</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex-between" style="margin-bottom:10px">
+        <h2 style="margin:0" id="dayLogTitle">Obiski</h2>
+        <span class="pill" id="dayLogCount">0 obiskov</span>
+      </div>
+      <div class="tbl-scroll">
+        <table id="dayTable">
+          <thead><tr><th>Stranka</th><th>Storitve</th><th class="num">Znesek</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- MESEC -->
+  <section class="panel" id="panel-mesec">
+    <div class="monthbar">
+      <span class="eyebrow">Mesec</span>
+      <input type="month" id="monthPick">
+    </div>
+    <div class="stack">
+      <div class="ledger">
+        <div class="ledger-top"><span class="ledger-date" id="monthLabel">—</span></div>
+        <div class="stats">
+          <div class="stat money"><div class="lab">Promet</div><div class="val" id="mPromet">0,00 €</div><div class="sub" id="mPrometSub"></div></div>
+          <div class="stat tip"><div class="lab">Napitnine</div><div class="val" id="mTips">0,00 €</div></div>
+          <div class="stat"><div class="lab">Strank</div><div class="val" id="mCount">0</div><div class="sub" id="mAvg"></div></div>
+        </div>
+        <div class="split" id="mSplit"></div>
+      </div>
+      <div class="grid2">
+        <div class="card"><h2>Po kategorijah</h2><div id="mByCat"></div></div>
+        <div class="card"><h2>Po storitvah</h2><div id="mByService"></div></div>
+      </div>
+      <div class="card">
+        <h2>Po dnevih</h2>
+        <div class="tbl-scroll">
+          <table id="mDayTable">
+            <thead><tr><th>Dan</th><th class="num">Strank</th><th class="num">Promet</th><th class="num">Napitnine</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKUPNO -->
+  <section class="panel stack" id="panel-skupno">
+    <div class="ledger">
+      <div class="ledger-top"><span class="ledger-date">Od začetka</span></div>
+      <div class="stats">
+        <div class="stat money"><div class="lab">Skupni promet</div><div class="val" id="tPromet">0,00 €</div><div class="sub" id="tPrometSub"></div></div>
+        <div class="stat tip"><div class="lab">Napitnine</div><div class="val" id="tTips">0,00 €</div></div>
+        <div class="stat"><div class="lab">Obiskov</div><div class="val" id="tCount">0</div></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>Stranke</h2><div id="tClients"></div></div>
+      <div class="card"><h2>Po plačilu</h2><div id="tByPay"></div></div>
+    </div>
+    <div class="card"><h2>Promet po mesecih</h2><div id="tByMonth"></div></div>
+  </section>
+
+  <!-- STRANKE -->
+  <section class="panel" id="panel-stranke">
+    <div class="card">
+      <div class="field" style="margin-bottom:8px">
+        <label for="clientSearch">Išči stranko</label>
+        <input type="text" id="clientSearch" placeholder="ime ali priimek">
+      </div>
+      <p class="subnote" style="margin:4px 0 12px">Oznaka <span class="badge due">za refil</span> pomeni, da je stranka, ki se vrača, zadnjič prišla pred več kot 4 tedni.</p>
+      <div class="tbl-scroll">
+        <table id="clientTable">
+          <thead><tr><th>Stranka</th><th class="num">Obiskov</th><th>Zadnji obisk</th><th class="num">Dni</th><th class="num">Skupaj</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENIK -->
+  <section class="panel stack" id="panel-cenik">
+    <div class="card">
+      <h2>Dodaj storitev</h2>
+      <div class="form">
+        <div class="row r2">
+          <div class="field"><label for="ncName">Ime</label><input type="text" id="ncName" placeholder="npr. Pedikura"></div>
+          <div class="field"><label for="ncCat">Kategorija</label>
+            <select id="ncCat"><option>BIAB</option><option>Podaljševanje in gel korekcija</option><option>Drugo</option></select>
+          </div>
+        </div>
+        <div class="row r2">
+          <div class="field"><label for="ncPrice">Cena (€)</label><input type="number" id="ncPrice" step="0.5" min="0" inputmode="decimal"></div>
+          <div class="field"><label for="ncMax">Cena do (€) — samo za razpon</label><input type="number" id="ncMax" step="0.5" min="0" inputmode="decimal" placeholder="neobvezno"></div>
+        </div>
+        <div><button class="btn primary" id="addCenikBtn">Dodaj v cenik</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Cenik</h2>
+      <p class="subnote">Spremembe cen veljajo samo za nove obiske. Stari obiski obdržijo ceno, ki je bila zabeležena takrat.</p>
+      <div class="tbl-scroll">
+        <table id="cenikTable">
+          <thead><tr><th>Storitev</th><th class="num">Cena</th><th>Stanje</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PODATKI -->
+  <section class="panel stack" id="panel-podatki">
+    <div class="card">
+      <h2>Varnostna kopija</h2>
+      <p class="subnote">Podatki se shranjujejo v ta brskalnik na tej napravi in ostanejo tudi, ko zapreš Safari. Na drugi napravi ali v drugem brskalniku jih ni, zato enkrat tedensko izvozi kopijo.</p>
+      <div class="btns">
+        <button class="btn primary" id="exportJson">Izvozi kopijo (.json)</button>
+        <button class="btn" id="importJsonBtn">Uvozi kopijo</button>
+        <button class="btn" id="exportCsv">Izvozi za Excel (.csv)</button>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+    </div>
+    <div class="card"><h2>Stanje</h2><div id="dataStats"></div></div>
+    <div class="card">
+      <h2 style="color:var(--red)">Ponastavitev</h2>
+      <p class="subnote">Izbriše vse obiske in vrne cenik na začetno stanje. Tega ni mogoče razveljaviti.</p>
+      <button class="btn danger" id="resetAll">Ponastavi vse podatke</button>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const STORE_KEY="tjasaNohtiBlagajna_v1";
+const CATS=["BIAB","Podaljševanje in gel korekcija","Drugo"];
+const CAT_SHORT={"BIAB":"BIAB","Podaljševanje in gel korekcija":"Podaljševanje","Drugo":"Drugo"};
+
+/* privzeti cenik (s slike) */
+const DEFAULT_CENIK=[
+  {ime:"BIAB – dolžina S (do kože)",kat:"BIAB",cena:38},
+  {ime:"BIAB – dolžina M/L",kat:"BIAB",cena:40},
+  {ime:"Podaljševanje – dolžina S/M",kat:"Podaljševanje in gel korekcija",cena:50},
+  {ime:"Refil S/M",kat:"Podaljševanje in gel korekcija",cena:45},
+  {ime:"Podaljševanje – dolžina L",kat:"Podaljševanje in gel korekcija",cena:55},
+  {ime:"Refil L",kat:"Podaljševanje in gel korekcija",cena:50},
+  {ime:"Podaljševanje – dolžina XL",kat:"Podaljševanje in gel korekcija",cena:60},
+  {ime:"Refil XL",kat:"Podaljševanje in gel korekcija",cena:55},
+  {ime:"Odstranjevanje z novim podaljševanjem",kat:"Drugo",cena:5,hitro:true},
+  {ime:"Odstranjevanje in urejanje",kat:"Drugo",cena:20},
+  {ime:"Popravilo nohta",kat:"Drugo",cena:5,hitro:true},
+  {ime:"Francoska manikura / chrome / 3D rožica",kat:"Drugo",cena:3,hitro:true},
+  {ime:"Lažje poslikave",kat:"Drugo",cena:10,cenaDo:15,hitro:true},
+  {ime:"Zahtevne poslikave",kat:"Drugo",cena:15,cenaDo:25,hitro:true}
+];
+
+let state={cenik:[],vnosi:[]};
+let basket=[];
+let editingId=null;
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function round2(n){return Math.round((Number(n)+Number.EPSILON)*100)/100}
+function freshCenik(){return DEFAULT_CENIK.map(c=>({id:uid(),aktiven:true,...c}))}
+
+function load(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw){const p=JSON.parse(raw);
+      state.cenik=Array.isArray(p.cenik)?p.cenik:[];
+      state.vnosi=Array.isArray(p.vnosi)?p.vnosi:[];}
+  }catch(e){console.warn(e)}
+  if(!state.cenik.length){state.cenik=freshCenik();save();}
+}
+function save(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}
+  catch(e){toast("Shranjevanje ni uspelo — preveri nastavitve brskalnika");}
+}
+
+/* format */
+function eur(n){return (Number(n)||0).toLocaleString("sl-SI",{minimumFractionDigits:2,maximumFractionDigits:2})+" €"}
+function eurShort(n){n=Number(n)||0;return (Number.isInteger(n)?n:n.toLocaleString("sl-SI",{minimumFractionDigits:2}))+" €"}
+function priceLabel(c){return c.cenaDo?`${c.cena}–${c.cenaDo} €`:eurShort(c.cena)}
+const DNI=["ned","pon","tor","sre","čet","pet","sob"];
+const MES=["jan","feb","mar","apr","maj","jun","jul","avg","sep","okt","nov","dec"];
+const MESL=["januar","februar","marec","april","maj","junij","julij","avgust","september","oktober","november","december"];
+function fmtDate(iso){const d=new Date(iso+"T00:00:00");return DNI[d.getDay()]+", "+d.getDate()+". "+MES[d.getMonth()]+" "+d.getFullYear()}
+function fmtDateShort(iso){const d=new Date(iso+"T00:00:00");return d.getDate()+". "+MES[d.getMonth()]+" "+d.getFullYear()}
+function todayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function daysSince(iso){return Math.round((new Date(todayISO()+"T00:00:00")-new Date(iso+"T00:00:00"))/86400000)}
+function normName(s){return (s||"").trim().replace(/\s+/g," ").toLowerCase()}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function sum(list,f){return list.reduce((s,v)=>s+(Number(f(v))||0),0)}
+
+/* plačilo */
+const PAY_LABEL={gotovina:"Gotovina",kartica:"Kartica",bon:"Bon"};
+const PAY_CLASS={gotovina:"cash",kartica:"card",bon:"bon"};
+function payBreak(list){const b={gotovina:0,kartica:0,bon:0,neznano:0};list.forEach(v=>{b[PAY_LABEL[v.placilo]?v.placilo:"neznano"]+=v.znesek});return b}
+function renderSplit(el,list){
+  const b=payBreak(list);
+  let h=`<div><div class="lab">Gotovina</div><div class="v cash">${eur(b.gotovina)}</div></div>
+    <div><div class="lab">Kartica</div><div class="v card">${eur(b.kartica)}</div></div>
+    <div><div class="lab">Bon</div><div class="v bon">${eur(b.bon)}</div></div>`;
+  if(b.neznano>0.001)h+=`<div><div class="lab">Neznano</div><div class="v unk">${eur(b.neznano)}</div></div>`;
+  el.style.gridTemplateColumns=b.neznano>0.001?"repeat(4,1fr)":"repeat(3,1fr)";
+  el.innerHTML=h;
+}
+function payRows(list){
+  const b=payBreak(list);const tot=b.gotovina+b.kartica+b.bon+b.neznano;
+  const pct=x=>tot?Math.round(x/tot*100):0;
+  const rows=[["Gotovina",b.gotovina,"var(--sage)"],["Kartica",b.kartica,"var(--slate)"],["Bon",b.bon,"var(--gold)"]];
+  if(b.neznano>0.001)rows.push(["Neznano",b.neznano,"var(--muted)"]);
+  return rows.map(([n,v,c])=>`<div class="bar-row"><span class="bar-name">${n}</span><span class="bar-val" style="color:${c}">${eur(v)} · ${pct(v)} %</span></div>`).join("");
+}
+function payBadge(v){const k=v.placilo;return PAY_LABEL[k]?`<span class="badge pay-${PAY_CLASS[k]}">${PAY_LABEL[k].toLowerCase()}</span>`:""}
+
+/* toast */
+let toastT;
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2200)}
+
+/* zavihki */
+document.getElementById("tabs").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-tab]");if(!b)return;
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.toggle("active",x===b));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+b.dataset.tab));
+  ({mesec:renderMonth,skupno:renderTotal,stranke:renderClients,cenik:renderCenik,podatki:renderData}[b.dataset.tab]||(()=>{}))();
+});
+
+/* izbira storitve */
+function activeCenik(){return state.cenik.filter(c=>c.aktiven!==false)}
+function fillServiceSelect(){
+  const sel=document.getElementById("serviceSel");const cur=sel.value;
+  const act=activeCenik();
+  let h="";
+  CATS.concat([...new Set(act.map(c=>c.kat))].filter(k=>!CATS.includes(k))).forEach(k=>{
+    const items=act.filter(c=>c.kat===k);if(!items.length)return;
+    h+=`<optgroup label="${esc(k)}">`+items.map(c=>`<option value="${c.id}">${esc(c.ime)} — ${priceLabel(c)}</option>`).join("")+"</optgroup>";
+  });
+  sel.innerHTML=h||'<option value="">— dodaj storitev v Cenik —</option>';
+  if(cur&&act.some(c=>c.id===cur))sel.value=cur;
+  syncPrice();
+  document.getElementById("quickChips").innerHTML=act.filter(c=>c.hitro).map(c=>
+    `<button class="chip" type="button" data-id="${c.id}">+ ${esc(c.ime)}<b>${priceLabel(c)}</b></button>`).join("")||'<span class="hint">Ni hitrih dodatkov.</span>';
+}
+function syncPrice(){
+  const c=state.cenik.find(x=>x.id===document.getElementById("serviceSel").value);
+  const hint=document.getElementById("rangeHint");
+  if(c){document.getElementById("priceInp").value=c.cena;
+    if(c.cenaDo){hint.textContent=`Razpon ${c.cena}–${c.cenaDo} € — vpiši dejansko ceno.`;hint.hidden=false}else hint.hidden=true;
+  }else hint.hidden=true;
+}
+
+/* košarica */
+function addToBasket(c,price){
+  basket.push({ime:c.ime,kat:c.kat,cena:round2(price)});
+  renderBasket();
+}
+function renderBasket(){
+  const el=document.getElementById("basket");
+  if(!basket.length){el.innerHTML='<div class="basket-empty">Izberi storitev in pritisni »+ Dodaj«. Dodaš lahko več storitev za istega obiska.</div>';return}
+  el.innerHTML=basket.map((p,i)=>`<div class="basket-row"><div class="nm">${esc(p.ime)}<div class="cat">${esc(CAT_SHORT[p.kat]||p.kat)}</div></div>
+      <div style="display:flex;align-items:center;gap:4px"><span class="pr">${eur(p.cena)}</span><button class="x" type="button" data-rm="${i}" aria-label="Odstrani">✕</button></div></div>`).join("")
+    +`<div class="basket-total"><span>Skupaj</span><b>${eur(sum(basket,p=>p.cena))}</b></div>`;
+}
+document.getElementById("addItemBtn").addEventListener("click",()=>{
+  const c=state.cenik.find(x=>x.id===document.getElementById("serviceSel").value);
+  const price=Number(document.getElementById("priceInp").value);
+  if(!c){toast("Izberi storitev");return}
+  if(isNaN(price)||price<0){toast("Preveri ceno");return}
+  addToBasket(c,price);
+  syncPrice();
+});
+document.getElementById("quickChips").addEventListener("click",e=>{
+  const b=e.target.closest(".chip");if(!b)return;
+  const c=state.cenik.find(x=>x.id===b.dataset.id);if(!c)return;
+  if(c.cenaDo){document.getElementById("serviceSel").value=c.id;syncPrice();document.getElementById("priceInp").focus();document.getElementById("priceInp").select();toast("Vpiši ceno in pritisni + Dodaj");return}
+  addToBasket(c,c.cena);
+});
+document.getElementById("basket").addEventListener("click",e=>{
+  const b=e.target.closest("[data-rm]");if(!b)return;
+  basket.splice(Number(b.dataset.rm),1);renderBasket();
+});
+
+/* stranka, ki se vrača */
+function updateReturnHint(){
+  const n=normName(document.getElementById("clientName").value);
+  const el=document.getElementById("returnHint");
+  if(!n){el.textContent="";el.className="hint";return}
+  const visits=state.vnosi.filter(v=>normName(v.stranka)===n&&v.id!==editingId).sort((a,b)=>b.datum.localeCompare(a.datum));
+  if(visits.length){
+    const last=visits[0];
+    el.textContent=`Se vrača — ${visits.length+1}. obisk · zadnjič ${fmtDateShort(last.datum)} (pred ${daysSince(last.datum)} dnevi): ${last.postavke.map(p=>p.ime).join(", ")}`;
+    el.className="hint return";
+  }else{el.textContent="Nova stranka";el.className="hint newc"}
+}
+function refreshClientList(){
+  const names=[...new Set(state.vnosi.map(v=>v.stranka).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"sl"));
+  document.getElementById("clientList").innerHTML=names.map(n=>`<option value="${esc(n)}">`).join("");
+}
+
+/* shrani / uredi */
+function saveEntry(){
+  const name=document.getElementById("clientName").value.trim();
+  const tip=round2(document.getElementById("tipInp").value)||0;
+  if(!name){toast("Vpiši ime stranke");return}
+  if(!basket.length){toast("Dodaj vsaj eno storitev");return}
+  if(tip<0){toast("Napitnina ne more biti negativna");return}
+  const rec={
+    id:editingId||uid(),
+    datum:document.getElementById("entryDate").value||todayISO(),
+    stranka:name,
+    postavke:basket.map(p=>({...p})),
+    znesek:round2(sum(basket,p=>p.cena)),
+    napitnina:tip,
+    placilo:document.getElementById("paySel").value,
+    opomba:document.getElementById("noteInp").value.trim()
+  };
+  if(editingId){const i=state.vnosi.findIndex(v=>v.id===editingId);if(i>-1)state.vnosi[i]=rec;toast("Obisk posodobljen")}
+  else{state.vnosi.push(rec);toast("Shranjeno: "+name+" — "+eur(rec.znesek))}
+  save();resetForm();renderDay();refreshClientList();
+}
+function resetForm(){
+  editingId=null;basket=[];
+  document.getElementById("formTitle").textContent="Nov obisk";
+  document.getElementById("saveBtn").textContent="Shrani obisk";
+  document.getElementById("cancelEdit").hidden=true;
+  ["clientName","noteInp","tipInp"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("paySel").value="gotovina";
+  document.getElementById("returnHint").textContent="";
+  renderBasket();syncPrice();
+}
+function editEntry(id){
+  const v=state.vnosi.find(x=>x.id===id);if(!v)return;
+  editingId=id;basket=v.postavke.map(p=>({...p}));
+  document.getElementById("formTitle").textContent="Uredi obisk";
+  document.getElementById("saveBtn").textContent="Posodobi obisk";
+  document.getElementById("cancelEdit").hidden=false;
+  document.getElementById("clientName").value=v.stranka;
+  document.getElementById("entryDate").value=v.datum;
+  document.getElementById("noteInp").value=v.opomba||"";
+  document.getElementById("paySel").value=v.placilo||"gotovina";
+  document.getElementById("tipInp").value=v.napitnina||"";
+  renderBasket();updateReturnHint();renderDay();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function deleteEntry(id){
+  const v=state.vnosi.find(x=>x.id===id);if(!v)return;
+  if(!confirm(`Izbrišem obisk?\n${v.stranka} — ${eur(v.znesek)}`))return;
+  state.vnosi=state.vnosi.filter(x=>x.id!==id);
+  if(editingId===id)resetForm();
+  save();renderDay();refreshClientList();toast("Obisk izbrisan");
+}
+document.getElementById("dayTable").addEventListener("click",e=>{
+  const ed=e.target.closest("[data-edit]");if(ed)return editEntry(ed.dataset.edit);
+  const dl=e.target.closest("[data-del]");if(dl)deleteEntry(dl.dataset.del);
+});
+
+/* povzetki */
+function fillStats(prefix,list){
+  const promet=sum(list,v=>v.znesek),tips=sum(list,v=>v.napitnina);
+  document.getElementById(prefix+"Promet").textContent=eur(promet);
+  document.getElementById(prefix+"Tips").textContent=eur(tips);
+  document.getElementById(prefix+"Count").textContent=list.length;
+  const sub=document.getElementById(prefix+"PrometSub");
+  if(sub)sub.textContent=tips>0?`skupaj z napitninami ${eur(promet+tips)}`:"";
+  const avg=document.getElementById(prefix+"Avg");
+  if(avg)avg.textContent=list.length?`povprečno ${eur(promet/list.length)}`:"";
+}
+
+function renderDay(){
+  const datum=document.getElementById("entryDate").value||todayISO();
+  document.getElementById("dayDate").textContent=fmtDate(datum);
+  document.getElementById("dayLogTitle").textContent="Obiski — "+fmtDateShort(datum);
+  const list=state.vnosi.filter(v=>v.datum===datum).sort((a,b)=>b.id.localeCompare(a.id));
+  fillStats("d",list);
+  renderSplit(document.getElementById("daySplit"),list);
+  document.getElementById("dayLogCount").textContent=list.length+(list.length===1?" obisk":list.length===2?" obiska":list.length<5&&list.length>0?" obiski":" obiskov");
+  const tb=document.querySelector("#dayTable tbody");
+  if(!list.length){tb.innerHTML=`<tr><td colspan="4" class="empty">Za ta dan še ni obiskov. Dodaj prvo stranko zgoraj.</td></tr>`;return}
+  tb.innerHTML=list.map(v=>`<tr${v.id===editingId?' style="background:var(--rose-soft)"':""}>
+    <td>${esc(v.stranka)}${v.opomba?`<div class="hint">${esc(v.opomba)}</div>`:""}</td>
+    <td class="items">${v.postavke.map(p=>esc(p.ime)).join("<br>")} <div style="margin-top:4px">${payBadge(v)}</div></td>
+    <td class="money">${eur(v.znesek)}${v.napitnina>0?`<div style="font-size:12px;color:var(--sage);font-weight:500">+ ${eur(v.napitnina)} np.</div>`:""}</td>
+    <td style="text-align:right;white-space:nowrap"><button class="link" data-edit="${v.id}">uredi</button> <button class="x" data-del="${v.id}" aria-label="Izbriši">✕</button></td>
+  </tr>`).join("");
+}
+
+function barList(rows,valFn,emptyMsg){
+  if(!rows.length)return `<div class="empty">${emptyMsg}</div>`;
+  const max=Math.max(...rows.map(r=>r[1].sum))||1;
+  return rows.map(([name,d])=>`<div class="bar-row"><span class="bar-name">${esc(name)}</span><span class="bar-val">${valFn(d)}</span>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.round(d.sum/max*100)}%"></div></div></div>`).join("");
+}
+function groupItems(list,keyFn){
+  const g={};list.forEach(v=>v.postavke.forEach(p=>{const k=keyFn(p);if(!g[k])g[k]={n:0,sum:0};g[k].n++;g[k].sum+=p.cena}));
+  return Object.entries(g).sort((a,b)=>b[1].sum-a[1].sum);
+}
+
+function renderMonth(){
+  const mp=document.getElementById("monthPick");if(!mp.value)mp.value=todayISO().slice(0,7);
+  const m=mp.value;const [y,mo]=m.split("-");
+  document.getElementById("monthLabel").textContent=MESL[Number(mo)-1]+" "+y;
+  const list=state.vnosi.filter(v=>v.datum.startsWith(m));
+  fillStats("m",list);
+  renderSplit(document.getElementById("mSplit"),list);
+  const uniq=new Set(list.map(v=>normName(v.stranka))).size;
+  document.getElementById("mAvg").textContent=list.length?`${uniq} različnih · povp. ${eur(sum(list,v=>v.znesek)/list.length)}`:"";
+  document.getElementById("mByCat").innerHTML=barList(groupItems(list,p=>CAT_SHORT[p.kat]||p.kat),d=>`${d.n}× · ${eur(d.sum)}`,"Ni podatkov za ta mesec.");
+  document.getElementById("mByService").innerHTML=barList(groupItems(list,p=>p.ime),d=>`${d.n}× · ${eur(d.sum)}`,"Ni podatkov za ta mesec.");
+  const days={};
+  list.forEach(v=>{if(!days[v.datum])days[v.datum]={n:0,sum:0,tip:0};days[v.datum].n++;days[v.datum].sum+=v.znesek;days[v.datum].tip+=v.napitnina||0});
+  const rows=Object.entries(days).sort((a,b)=>b[0].localeCompare(a[0]));
+  document.querySelector("#mDayTable tbody").innerHTML=rows.length?rows.map(([d,x])=>
+    `<tr><td>${fmtDate(d)}</td><td class="num">${x.n}</td><td class="money">${eur(x.sum)}</td><td class="num" style="color:var(--sage)">${eur(x.tip)}</td></tr>`).join("")
+    :`<tr><td colspan="4" class="empty">Ni podatkov za ta mesec.</td></tr>`;
+}
+
+function renderTotal(){
+  const list=state.vnosi;
+  fillStats("t",list);
+  const byC={};list.forEach(v=>{const n=normName(v.stranka);byC[n]=(byC[n]||0)+1});
+  const uniq=Object.keys(byC).length,ret=Object.values(byC).filter(n=>n>=2).length;
+  const promet=sum(list,v=>v.znesek);
+  document.getElementById("tClients").innerHTML=`
+    <div class="bar-row"><span class="bar-name">Različnih strank</span><span class="bar-val">${uniq}</span></div>
+    <div class="bar-row"><span class="bar-name">Ki se vračajo (2+ obiskov)</span><span class="bar-val" style="color:var(--sage)">${ret}</span></div>
+    <div class="bar-row"><span class="bar-name">Stopnja vračanja</span><span class="bar-val">${uniq?Math.round(ret/uniq*100):0} %</span></div>
+    <div class="bar-row"><span class="bar-name">Povprečen obisk</span><span class="bar-val">${eur(list.length?promet/list.length:0)}</span></div>
+    <div class="bar-row"><span class="bar-name">Obiskov na stranko</span><span class="bar-val">${uniq?(list.length/uniq).toFixed(1).replace(".",","):"0"}</span></div>`;
+  document.getElementById("tByPay").innerHTML=list.length?payRows(list):`<div class="empty">Še ni podatkov.</div>`;
+  const mo={};list.forEach(v=>{const k=v.datum.slice(0,7);if(!mo[k])mo[k]={sum:0,n:0};mo[k].sum+=v.znesek;mo[k].n++});
+  const rows=Object.entries(mo).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,d])=>{const [y,m]=k.split("-");return [MESL[Number(m)-1]+" "+y,d]});
+  document.getElementById("tByMonth").innerHTML=barList(rows,d=>`${d.n} obiskov · ${eur(d.sum)}`,"Ko dodaš prve obiske, se tu prikaže gibanje po mesecih.");
+}
+
+function renderClients(){
+  const q=normName(document.getElementById("clientSearch").value);
+  const map={};
+  state.vnosi.forEach(v=>{const n=normName(v.stranka);if(!n)return;
+    if(!map[n])map[n]={display:v.stranka,n:0,sum:0,last:v.datum};
+    const o=map[n];o.n++;o.sum+=v.znesek;if(v.datum>=o.last){o.last=v.datum;o.display=v.stranka}});
+  let rows=Object.entries(map).map(([k,o])=>({k,...o,dni:daysSince(o.last)}));
+  if(q)rows=rows.filter(r=>r.k.includes(q));
+  rows.sort((a,b)=>b.n-a.n||b.sum-a.sum);
+  const tb=document.querySelector("#clientTable tbody");
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="6" class="empty">${state.vnosi.length?"Ni zadetkov.":"Še ni strank. Dodaj prvi obisk v Blagajni."}</td></tr>`;return}
+  tb.innerHTML=rows.map(r=>{
+    const badge=r.n>=2&&r.dni>28?'<span class="badge due">za refil</span>':r.n>=2?'<span class="badge ret">se vrača</span>':'<span class="badge new">nova</span>';
+    return `<tr><td>${esc(r.display)}</td><td class="num">${r.n}</td><td>${fmtDateShort(r.last)}</td><td class="num">${r.dni}</td><td class="money">${eur(r.sum)}</td><td>${badge}</td></tr>`;
+  }).join("");
+}
+
+/* cenik */
+function addCenik(){
+  const ime=document.getElementById("ncName").value.trim();
+  const cena=round2(document.getElementById("ncPrice").value);
+  const maxRaw=document.getElementById("ncMax").value;
+  const cenaDo=maxRaw===""?null:round2(maxRaw);
+  if(!ime){toast("Vpiši ime storitve");return}
+  if(isNaN(cena)||cena<0){toast("Preveri ceno");return}
+  if(cenaDo!==null&&(isNaN(cenaDo)||cenaDo<=cena)){toast("Cena do mora biti višja od cene");return}
+  const item={id:uid(),ime,kat:document.getElementById("ncCat").value,cena,aktiven:true};
+  if(cenaDo)item.cenaDo=cenaDo;
+  state.cenik.push(item);save();
+  ["ncName","ncPrice","ncMax"].forEach(id=>document.getElementById(id).value="");
+  renderCenik();fillServiceSelect();toast("Dodano v cenik");
+}
+function renderCenik(){
+  const tb=document.querySelector("#cenikTable tbody");
+  if(!state.cenik.length){tb.innerHTML=`<tr><td colspan="4" class="empty">Cenik je prazen.</td></tr>`;return}
+  const order=state.cenik.slice().sort((a,b)=>{const ia=CATS.indexOf(a.kat),ib=CATS.indexOf(b.kat);return (ia<0?9:ia)-(ib<0?9:ib)});
+  let lastCat=null;
+  tb.innerHTML=order.map(c=>{
+    const off=c.aktiven===false;
+    const head=c.kat!==lastCat?`<tr><td colspan="4" style="padding-top:16px"><span class="eyebrow">${esc(c.kat)}</span></td></tr>`:"";
+    lastCat=c.kat;
+    return head+`<tr style="${off?"opacity:.5":""}">
+      <td>${esc(c.ime)}${c.hitro?' <span class="badge new">hitri dodatek</span>':""}</td>
+      <td class="money">${priceLabel(c)}</td>
+      <td>${off?"skrit":"aktiven"}</td>
+      <td style="text-align:right;white-space:nowrap">
+        <button class="link" data-cedit="${c.id}">uredi</button>
+        <button class="link" data-ctoggle="${c.id}" style="color:var(--muted);border-color:var(--muted)">${off?"vklopi":"skrij"}</button>
+        <button class="x" data-cdel="${c.id}" aria-label="Izbriši">✕</button>
+      </td></tr>`;
+  }).join("");
+}
+document.getElementById("cenikTable").addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  const id=t.dataset.cedit||t.dataset.ctoggle||t.dataset.cdel;
+  const c=state.cenik.find(x=>x.id===id);if(!c)return;
+  if(t.dataset.cedit){
+    const ime=prompt("Ime storitve:",c.ime);if(ime===null)return;
+    const cena=prompt("Cena (€):",c.cena);if(cena===null)return;
+    const cenaDo=prompt("Cena do (€) — pusti prazno, če ni razpona:",c.cenaDo||"");if(cenaDo===null)return;
+    c.ime=ime.trim()||c.ime;
+    const nc=round2(cena);if(!isNaN(nc)&&nc>=0)c.cena=nc;
+    const nd=cenaDo.trim()===""?null:round2(cenaDo);
+    if(nd&&nd>c.cena)c.cenaDo=nd;else delete c.cenaDo;
+    toast("Cenik posodobljen (stari obiski ostanejo nespremenjeni)");
+  }else if(t.dataset.ctoggle){c.aktiven=c.aktiven===false}
+  else{
+    if(!confirm(`Izbrišem "${c.ime}" iz cenika?\n\nStari obiski s to storitvijo ostanejo nespremenjeni.`))return;
+    state.cenik=state.cenik.filter(x=>x.id!==id);toast("Storitev izbrisana iz cenika");
+  }
+  save();renderCenik();fillServiceSelect();
+});
+
+/* podatki */
+function renderData(){
+  const first=state.vnosi.length?state.vnosi.map(v=>v.datum).sort()[0]:null;
+  document.getElementById("dataStats").innerHTML=`
+    <div class="bar-row"><span class="bar-name">Vseh obiskov</span><span class="bar-val">${state.vnosi.length}</span></div>
+    <div class="bar-row"><span class="bar-name">Storitev v ceniku</span><span class="bar-val">${state.cenik.length}</span></div>
+    <div class="bar-row"><span class="bar-name">Prvi obisk</span><span class="bar-val">${first?fmtDate(first):"—"}</span></div>`;
+}
+function download(name,text,mime){
+  const url=URL.createObjectURL(new Blob([text],{type:mime}));
+  const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
+}
+function csvCell(s){s=String(s);return /[";\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+function num(n){return String(round2(n)).replace(".",",")}
+document.getElementById("exportJson").addEventListener("click",()=>{
+  download(`tjasa-nohti-kopija-${todayISO()}.json`,JSON.stringify(state,null,2),"application/json");toast("Kopija izvožena");
+});
+document.getElementById("exportCsv").addEventListener("click",()=>{
+  const head=["Datum","Stranka","Storitev","Kategorija","Cena","Placilo","Napitnina (na obisk)","Opomba"];
+  const rows=[];
+  state.vnosi.slice().sort((a,b)=>a.datum.localeCompare(b.datum)).forEach(v=>v.postavke.forEach((p,i)=>rows.push([
+    v.datum,v.stranka,p.ime,p.kat,num(p.cena),PAY_LABEL[v.placilo]||"",i===0?num(v.napitnina||0):"0",i===0?(v.opomba||""):""
+  ].map(csvCell).join(";"))));
+  download(`tjasa-nohti-${todayISO()}.csv`,"﻿"+head.join(";")+"\n"+rows.join("\n"),"text/csv;charset=utf-8");
+  toast("CSV za Excel izvožen");
+});
+document.getElementById("importJsonBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{
+    const p=JSON.parse(r.result);
+    if(!p||!Array.isArray(p.vnosi)||!Array.isArray(p.cenik)||p.vnosi.some(v=>!Array.isArray(v.postavke)))throw 0;
+    if(!confirm(`Uvozim kopijo?\n\nObiskov: ${p.vnosi.length}\nStoritev: ${p.cenik.length}\n\nTo zamenja trenutne podatke v tem brskalniku.`))return;
+    state={cenik:p.cenik,vnosi:p.vnosi};save();
+    resetForm();fillServiceSelect();renderDay();renderData();refreshClientList();toast("Kopija uvožena");
+  }catch(err){toast("Datoteka ni veljavna kopija tega salona")}};
+  r.readAsText(f);
+});
+document.getElementById("resetAll").addEventListener("click",()=>{
+  if(!confirm("Res izbrišem VSE obiske in ponastavim cenik?"))return;
+  if(!confirm("Zadnje opozorilo — tega ni mogoče razveljaviti. Nadaljujem?"))return;
+  state={cenik:freshCenik(),vnosi:[]};save();
+  resetForm();fillServiceSelect();renderDay();renderData();refreshClientList();toast("Vse ponastavljeno");
+});
+
+/* dogodki */
+document.getElementById("entryDate").addEventListener("change",renderDay);
+document.getElementById("serviceSel").addEventListener("change",syncPrice);
+document.getElementById("clientName").addEventListener("input",updateReturnHint);
+document.getElementById("saveBtn").addEventListener("click",saveEntry);
+document.getElementById("cancelEdit").addEventListener("click",()=>{resetForm();renderDay()});
+document.getElementById("monthPick").addEventListener("change",renderMonth);
+document.getElementById("clientSearch").addEventListener("input",renderClients);
+document.getElementById("addCenikBtn").addEventListener("click",addCenik);
+document.getElementById("clientName").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();document.getElementById("serviceSel").focus()}});
+document.getElementById("priceInp").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();document.getElementById("addItemBtn").click()}});
+["noteInp","tipInp"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveEntry()}}));
+
+/* zagon */
+load();
+document.getElementById("entryDate").value=todayISO();
+document.getElementById("monthPick").value=todayISO().slice(0,7);
+fillServiceSelect();renderBasket();renderDay();
+</script>
+</body>
+</html>
